@@ -44,6 +44,15 @@ class _HomePageState extends State<HomePage> {
                   secondaryBackground: _secondBackground(),
                   movementDuration: Duration(seconds: 2),
                   key: Key(index),
+                onDismissed: (direction) {
+                  // Remove the item from the data source.
+                  setState(() {
+                    print('direction $direction');
+                  });
+                  // Then show a snackbar.
+                  Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text("$items dismissed")));
+                },
 
               );
             }).toList(),
@@ -62,7 +71,12 @@ class _HomePageState extends State<HomePage> {
         color: Colors.red,
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Icon(Icons.delete),
+      child: IconButton(icon: Icon(Icons.delete), onPressed: (){
+        setState(() {
+          items.removeLast();
+
+        });
+      }),
     );
   }
 }
