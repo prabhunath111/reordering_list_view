@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 void main() => runApp(MaterialApp(
   home: HomePage(),
@@ -11,8 +13,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  List<String> data = ['aaa','bbb','ccc','ddd','eee','fff','ggg','hhh','iii','jjj'];
   final items = List<String> .generate(20,(i)=>"Item ${i + 1}");
+  final Map<DismissDirection, double> dismissThresholds={DismissDirection.endToStart:1.0};
+
 
   void onreorder(int oldIndex, int newIndex){
 
@@ -34,28 +37,37 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: ReorderableListView(
+
             children:
             items.map((index){
+
+              print('index $index');
+
               return Dismissible(
-                child: ListTile(key: ObjectKey(index),title: Text('${index}'),subtitle: Text('Move it anywhere'),
+                crossAxisEndOffset: 0.5,
+                onResize: onresize(),
+                resizeDuration: Duration(days: 1),
+
+                dismissThresholds: dismissThresholds,
+                child: ListTile(key: ObjectKey(index),title: Text('$index'),subtitle: Text('Move it anywhere'),
                 ),
                   direction: DismissDirection.endToStart,
                   background: Container(color: Colors.red),
                   secondaryBackground: _secondBackground(),
-                  movementDuration: Duration(seconds: 2),
+                  movementDuration: Duration(days: 1),
                   key: Key(index),
-                onDismissed: (direction) {
+                  onDismissed: (direction) {
+
                   // Remove the item from the data source.
                   setState(() {
-                    print('direction $direction');
+
                   });
                   // Then show a snackbar.
                   Scaffold.of(context)
                       .showSnackBar(SnackBar(content: Text("$items dismissed")));
                 },
-
               );
-            }).toList(),
+            },).toList(),
 
             onReorder: onreorder,
         ),
@@ -65,6 +77,7 @@ class _HomePageState extends State<HomePage> {
 
   _secondBackground() {
     return Container(
+
       margin: EdgeInsets.all(12.0),
       alignment: Alignment.centerRight,
       decoration: BoxDecoration(
@@ -73,10 +86,16 @@ class _HomePageState extends State<HomePage> {
       ),
       child: IconButton(icon: Icon(Icons.delete), onPressed: (){
         setState(() {
-          items.removeLast();
+
 
         });
       }),
     );
+  }
+
+  onresize() {
+   setState(() {
+
+   });
   }
 }
